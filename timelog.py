@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import calendar
+import configparser
 import contextlib
+import os
 import re
 import subprocess
 import sys
@@ -16,8 +18,35 @@ from datetime import timedelta
 
 import requests
 
+# Load configuration from ini file
+config = configparser.ConfigParser()
+config_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "timelog.ini"
+)
+
+# Set defaults (will be used if no ini file exists)
+default_log_file = os.path.join(
+    os.path.expanduser("~"),
+    ".timelog",
+    "timelog.txt"
+)
+config["DEFAULT"] = {
+    "log_file": default_log_file,
+    "editor": "nano"
+}
+
+# Read the config file if it exists
+if os.path.exists(config_path):
+    try:
+        config.read(config_path)
+    except (configparser.Error, IOError) as e:
+        print("Warning: Could not read config file: {}".format(e))
+        print("Using default configuration")
+
 # File where information is stored
-LOG_FILE = "/home/jordi/.timelog/timelog.txt"
+LOG_FILE = config.get("DEFAULT", "log_file")
+EDITOR = config.get("DEFAULT", "editor")
 
 # Working hours range per day (minimum, optimal, excellent)
 HOURS_DAY_RANGE = (4, 6, 8)
@@ -245,8 +274,8 @@ def main():
             write("arrived**")
 
         elif is_edit(text):
-            # Open nano and jump directly to last line
-            subprocess.check_call(["nano", "+9999999", LOG_FILE])
+            # Open editor and jump directly to last line
+            subprocess.check_call([EDITOR, "+9999999", LOG_FILE])
 
         elif is_search(text):
             # Autocomplete
