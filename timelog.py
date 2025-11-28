@@ -47,7 +47,7 @@ if os.path.exists(config_path):
         print("Using default configuration")
 
 # File where information is stored
-LOG_FILE = config.get("DEFAULT", "log_file")
+LOG_FILE = os.path.expanduser(config.get("DEFAULT", "log_file"))
 EDITOR = config.get("DEFAULT", "editor")
 
 # Non-billable projects (comma-separated in config)
