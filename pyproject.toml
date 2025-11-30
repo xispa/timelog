@@ -1,0 +1,8 @@
+[project]
+name = "timelog"
+version = "0.1"
+dependencies = [
+    "requests",
+]
+[project.scripts]
+timelog = "timelog:main"
