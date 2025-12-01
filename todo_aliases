@@ -1,3 +1,5 @@
+# Copy & past to ~/.bash_aliases and `source ~/.bashrc` afterwards
+
 # TODO aliases
 alias t="~/.todo/todo.sh -d ~/.todo/todo.cfg -t"
 alias tl='t list'
